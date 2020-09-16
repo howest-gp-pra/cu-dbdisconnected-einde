@@ -1,0 +1,49 @@
+﻿<Window x:Class="Pra.DbDisconnected.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Pra.DbDisconnected.WPF"
+        mc:Ignorable="d"
+        Title="DB Disconnected : cursusmateriaal" Height="415.531" Width="947.564" Loaded="Window_Loaded" Closing="Window_Closing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="0*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="dgAuteur" HorizontalAlignment="Left" Height="173" Margin="37,116,0,0" VerticalAlignment="Top" Width="357" SelectedValuePath="auteurID"/>
+        <Button x:Name="btnSorteer" Content="Sorteer" HorizontalAlignment="Left" Margin="39,309,0,0" VerticalAlignment="Top" Width="75" Click="btnSorteer_Click" Height="20"/>
+        <Button x:Name="btnFilter" Content="Filter" HorizontalAlignment="Left" Margin="119,309,0,0" VerticalAlignment="Top" Width="75" Click="btnFilter_Click" Height="20"/>
+        <GroupBox Header="Auteur toevoegen" HorizontalAlignment="Left" Height="84" Margin="37,10,0,0" VerticalAlignment="Top" Width="360">
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Naam : " HorizontalAlignment="Left" Margin="10,27,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="txtAuteur" HorizontalAlignment="Left" Height="23" Margin="81,27,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165" MaxLength="50"/>
+                <Button x:Name="btnToevoegen" Content="Toevoegen" HorizontalAlignment="Left" Margin="260,30,0,0" VerticalAlignment="Top" Width="75" Click="btnToevoegen_Click" Grid.ColumnSpan="2"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="Boek toevoegen" HorizontalAlignment="Left" Height="170" Margin="426,10,0,0" VerticalAlignment="Top" Width="400">
+            <Grid Margin="0,0,0,2"  >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="0*"/>
+                </Grid.ColumnDefinitions>
+                <Label Content="Titel : " HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top"/>
+                <Label Content="Auteur : " HorizontalAlignment="Left" Margin="10,43,0,0" VerticalAlignment="Top"/>
+                <Label Content="Uitgever : " HorizontalAlignment="Left" Margin="10,74,0,0" VerticalAlignment="Top"/>
+                <Label Content="Jaartal : " HorizontalAlignment="Left" Margin="12,105,0,0" VerticalAlignment="Top"/>
+                <TextBox x:Name="txtTitel" HorizontalAlignment="Left" Height="23" Margin="86,15,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165" MaxLength="50"/>
+                <Button x:Name="btnBoekToevoegen" Content="Toevoegen" HorizontalAlignment="Left" Margin="272,18,0,0" VerticalAlignment="Top" Width="75" Click="btnBoekToevoegen_Click" />
+                <ComboBox x:Name="cmbAuteur" HorizontalAlignment="Left" VerticalAlignment="Top" Width="165" Margin="86,47,0,0"/>
+                <ComboBox x:Name="cmbUitgever" HorizontalAlignment="Left" VerticalAlignment="Top" Width="165" Margin="86,78,0,0"/>
+                <TextBox x:Name="txtJaartal" HorizontalAlignment="Left" Height="23" Margin="86,108,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="165" MaxLength="50"/>
+            </Grid>
+        </GroupBox>
+        <DataGrid x:Name="dgBoek" HorizontalAlignment="Left" Height="173" Margin="426,194,0,-14" VerticalAlignment="Top" Width="491"/>
+        <Button x:Name="btnVerwijderAuteur" Content="Verwijder auteur" HorizontalAlignment="Left" Height="21" Margin="264,308,0,0" VerticalAlignment="Top" Width="130" Click="btnVerwijderAuteur_Click"/>
+
+    </Grid>
+</Window>
