@@ -25,8 +25,8 @@ namespace Pra.DbDisconnected.WPF
                 MaakTabellen();
                 VulTabellen();
             }
-            dgAuteur.ItemsSource = dsBoekenLijst.Tables[0].DefaultView;
-            dgBoek.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
+            dgAuthors.ItemsSource = dsBoekenLijst.Tables[0].DefaultView;
+            dgBooks.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
             BronGegevensAanpassen();
         }
         private bool LeesXML()
@@ -144,48 +144,48 @@ namespace Pra.DbDisconnected.WPF
             nieuweUitgever["UitgeverNaam"] = naam;
             dsBoekenLijst.Tables["Uitgever"].Rows.Add(nieuweUitgever);
         }
-        private void btnSorteer_Click(object sender, RoutedEventArgs e)
+        private void Sort_Click(object sender, RoutedEventArgs e)
         {
             DataView gesorteerdeTabel = new DataView();
             gesorteerdeTabel.Table = dsBoekenLijst.Tables["Auteur"];
             gesorteerdeTabel.Sort = "AuteurNaam desc, AuteurID desc";
-            dgAuteur.ItemsSource = gesorteerdeTabel;
+            dgAuthors.ItemsSource = gesorteerdeTabel;
         }
-        private void btnFilter_Click(object sender, RoutedEventArgs e)
+        private void Filter_Click(object sender, RoutedEventArgs e)
         {
             DataView gefilterdeTabel = new DataView(dsBoekenLijst.Tables["Auteur"]);
             gefilterdeTabel.RowFilter = "AuteurNaam like 'T%'";
-            dgAuteur.ItemsSource = gefilterdeTabel;
+            dgAuthors.ItemsSource = gefilterdeTabel;
         }
-        private void btnToevoegen_Click(object sender, RoutedEventArgs e)
+        private void AddAuthor_Click(object sender, RoutedEventArgs e)
         {
-            string auteur = txtAuteur.Text.Trim();
+            string auteur = txtAuthor.Text.Trim();
             ToevoegenDataAuteur(auteur);
-            dgAuteur.ItemsSource = dsBoekenLijst.Tables["Auteur"].DefaultView;
+            dgAuthors.ItemsSource = dsBoekenLijst.Tables["Auteur"].DefaultView;
             BronGegevensAanpassen();
         }
         private void BronGegevensAanpassen()
         {
-            cmbAuteur.Items.Clear();
-            cmbUitgever.Items.Clear();
+            cmbAuthors.Items.Clear();
+            cmbPublishers.Items.Clear();
             ComboBoxItem itm;
             for (int teller = 0; teller < dsBoekenLijst.Tables[0].Rows.Count; teller++)
             {
                 itm = new ComboBoxItem();
                 itm.Content = (dsBoekenLijst.Tables[0].Rows[teller][1]);
                 itm.Tag = (dsBoekenLijst.Tables[0].Rows[teller][0]);
-                cmbAuteur.Items.Add(itm);
+                cmbAuthors.Items.Add(itm);
             }
-            cmbAuteur.SelectedIndex = 0;
+            cmbAuthors.SelectedIndex = 0;
 
             for (int teller = 0; teller < dsBoekenLijst.Tables[1].Rows.Count; teller++)
             {
                 itm = new ComboBoxItem();
                 itm.Content = dsBoekenLijst.Tables[1].Rows[teller][1];
                 itm.Tag = dsBoekenLijst.Tables[1].Rows[teller][0];
-                cmbUitgever.Items.Add(itm);
+                cmbPublishers.Items.Add(itm);
             }
-            cmbUitgever.SelectedIndex = 0;
+            cmbPublishers.SelectedIndex = 0;
         }
         private void ToevoegenBoek(string titel, int auteurID, int uitgeverID, int jaartal)
         {
@@ -196,30 +196,30 @@ namespace Pra.DbDisconnected.WPF
             nieuwBoek["Jaartal"] = jaartal;
             dsBoekenLijst.Tables[2].Rows.Add(nieuwBoek);
         }
-        private void btnBoekToevoegen_Click(object sender, RoutedEventArgs e)
+        private void AddBook_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string titel = txtTitel.Text;
-                int jaartal = int.Parse(txtJaartal.Text);
+                string titel = txtTitle.Text;
+                int jaartal = int.Parse(txtYear.Text);
                 ComboBoxItem itm;
-                itm = (ComboBoxItem)cmbAuteur.SelectedItem;
+                itm = (ComboBoxItem)cmbAuthors.SelectedItem;
                 int IDauteur = int.Parse(itm.Tag.ToString());
-                itm = (ComboBoxItem)cmbUitgever.SelectedItem;
+                itm = (ComboBoxItem)cmbPublishers.SelectedItem;
                 int IDuitgever = int.Parse(itm.Tag.ToString());
                 ToevoegenBoek(titel, IDauteur, IDuitgever, jaartal);
-                dgBoek.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
+                dgBooks.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Foute ingave \nReden :" + ex.Message);
             }
         }
-        private void btnVerwijderAuteur_Click(object sender, RoutedEventArgs e)
+        private void RemoveAuthor_Click(object sender, RoutedEventArgs e)
         {
-            if (dgAuteur.SelectedIndex > -1)
+            if (dgAuthors.SelectedIndex > -1)
             {
-                string zoekAuteurID = dgAuteur.SelectedValue.ToString();
+                string zoekAuteurID = dgAuthors.SelectedValue.ToString();
                 foreach (DataRow rij in dsBoekenLijst.Tables[0].Rows)
                 {
                     if (rij["auteurID"].ToString() == zoekAuteurID)
@@ -229,8 +229,8 @@ namespace Pra.DbDisconnected.WPF
                     }
                 }
                 BronGegevensAanpassen();
-                dgAuteur.ItemsSource = dsBoekenLijst.Tables[0].DefaultView;
-                dgBoek.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
+                dgAuthors.ItemsSource = dsBoekenLijst.Tables[0].DefaultView;
+                dgBooks.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
             }
         }
 
