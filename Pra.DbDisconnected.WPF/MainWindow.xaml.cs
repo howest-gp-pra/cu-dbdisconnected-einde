@@ -15,200 +15,200 @@ namespace Pra.DbDisconnected.WPF
         {
             InitializeComponent();
         }
-        DataSet dsBoekenLijst = new DataSet("Bibliotheek");
-        string XMLMap = Directory.GetCurrentDirectory() + "/XMLBestanden";
-        string XMLBestand = Directory.GetCurrentDirectory() + "/XMLBestanden/boeken.xml";
+        DataSet dsBookList = new DataSet("Bibliotheek");
+        string XMLDirectory = Directory.GetCurrentDirectory() + "/XMLBestanden";
+        string XMLFile = Directory.GetCurrentDirectory() + "/XMLBestanden/boeken.xml";
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!LeesXML())
+            if (!ReadXML())
             {
-                MaakTabellen();
-                VulTabellen();
+                CreateTables();
+                FillTables();
             }
-            dgAuthors.ItemsSource = dsBoekenLijst.Tables[0].DefaultView;
-            dgBooks.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
-            BronGegevensAanpassen();
+            dgAuthors.ItemsSource = dsBookList.Tables[0].DefaultView;
+            dgBooks.ItemsSource = dsBookList.Tables[2].DefaultView;
+            SourceDataChange();
         }
-        private bool LeesXML()
+        private bool ReadXML()
         {
-            bool gelezen = false;
-            if (Directory.Exists(XMLMap))
+            bool read = false;
+            if (Directory.Exists(XMLDirectory))
             {
-                if (File.Exists(XMLBestand))
+                if (File.Exists(XMLFile))
                 {
-                    dsBoekenLijst.ReadXml(XMLBestand, XmlReadMode.ReadSchema);
-                    gelezen = true;
+                    dsBookList.ReadXml(XMLFile, XmlReadMode.ReadSchema);
+                    read = true;
                 }
             }
-            return gelezen;
+            return read;
         }
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!Directory.Exists(XMLMap))
-                Directory.CreateDirectory(XMLMap);
-            if (File.Exists(XMLBestand))
-                File.Delete(XMLBestand);
-            dsBoekenLijst.WriteXml(XMLBestand, XmlWriteMode.WriteSchema);
+            if (!Directory.Exists(XMLDirectory))
+                Directory.CreateDirectory(XMLDirectory);
+            if (File.Exists(XMLFile))
+                File.Delete(XMLFile);
+            dsBookList.WriteXml(XMLFile, XmlWriteMode.WriteSchema);
         }
-        private void MaakTabellen()
+        private void CreateTables()
         {
             // creatie dtAuteur
-            DataTable dtAuteur;
-            dtAuteur = new DataTable();
-            dsBoekenLijst.Tables.Add(dtAuteur);
+            DataTable dtAuthor;
+            dtAuthor = new DataTable();
+            dsBookList.Tables.Add(dtAuthor);
 
-            dtAuteur.TableName = "Auteur";
+            dtAuthor.TableName = "Auteur";
 
-            DataColumn dcAuteurID = new DataColumn();
-            dcAuteurID.ColumnName = "auteurID";
-            dcAuteurID.DataType = typeof(int);
-            dcAuteurID.AutoIncrement = true;
-            dcAuteurID.AutoIncrementSeed = 1;
-            dcAuteurID.AutoIncrementStep = 1;
-            dcAuteurID.Unique = true;
-            dtAuteur.Columns.Add(dcAuteurID);
-            dtAuteur.PrimaryKey = new DataColumn[] { dcAuteurID };
+            DataColumn dcAuthorId = new DataColumn();
+            dcAuthorId.ColumnName = "auteurID";
+            dcAuthorId.DataType = typeof(int);
+            dcAuthorId.AutoIncrement = true;
+            dcAuthorId.AutoIncrementSeed = 1;
+            dcAuthorId.AutoIncrementStep = 1;
+            dcAuthorId.Unique = true;
+            dtAuthor.Columns.Add(dcAuthorId);
+            dtAuthor.PrimaryKey = new DataColumn[] { dcAuthorId };
 
-            DataColumn dcAuteurNaam = new DataColumn();
-            dcAuteurNaam.ColumnName = "auteurNaam";
-            dcAuteurNaam.DataType = typeof(string);
-            dcAuteurNaam.MaxLength = 50;
-            dtAuteur.Columns.Add(dcAuteurNaam);
+            DataColumn dcAuthorName = new DataColumn();
+            dcAuthorName.ColumnName = "auteurNaam";
+            dcAuthorName.DataType = typeof(string);
+            dcAuthorName.MaxLength = 50;
+            dtAuthor.Columns.Add(dcAuthorName);
 
-            DataColumn dcDdisplayAuteur = new DataColumn("DisplayAuteur");
-            dcDdisplayAuteur.Expression = "auteurNaam + ' (' + auteurID + ')'";
-            dtAuteur.Columns.Add(dcDdisplayAuteur);
+            DataColumn dcDisplayAuthor = new DataColumn("DisplayAuteur");
+            dcDisplayAuthor.Expression = "auteurNaam + ' (' + auteurID + ')'";
+            dtAuthor.Columns.Add(dcDisplayAuthor);
 
             // creatie dtUitgever
-            DataTable dtUitgever = new DataTable();
-            dtUitgever.TableName = "Uitgever";
-            dsBoekenLijst.Tables.Add(dtUitgever);
+            DataTable dtPublisher = new DataTable();
+            dtPublisher.TableName = "Uitgever";
+            dsBookList.Tables.Add(dtPublisher);
 
-            DataColumn dcUitgeverID = new DataColumn();
-            dcUitgeverID.ColumnName = "uitgeverID";
-            dcUitgeverID.DataType = typeof(int);
-            dcUitgeverID.AutoIncrement = true;
-            dcUitgeverID.AutoIncrementSeed = 1;
-            dcUitgeverID.AutoIncrementStep = 1;
-            dcUitgeverID.Unique = true;
+            DataColumn dcPublisherId = new DataColumn();
+            dcPublisherId.ColumnName = "uitgeverID";
+            dcPublisherId.DataType = typeof(int);
+            dcPublisherId.AutoIncrement = true;
+            dcPublisherId.AutoIncrementSeed = 1;
+            dcPublisherId.AutoIncrementStep = 1;
+            dcPublisherId.Unique = true;
 
-            DataColumn dcUitgeverNaam = new DataColumn();
-            dcUitgeverNaam.ColumnName = "uitgeverNaam";
-            dcUitgeverNaam.DataType = typeof(string);
-            dcUitgeverNaam.MaxLength = 50;
+            DataColumn dcPUblisherName = new DataColumn();
+            dcPUblisherName.ColumnName = "uitgeverNaam";
+            dcPUblisherName.DataType = typeof(string);
+            dcPUblisherName.MaxLength = 50;
 
-            dtUitgever.Columns.Add(dcUitgeverID);
-            dtUitgever.Columns.Add(dcUitgeverNaam);
-            dtUitgever.PrimaryKey = new DataColumn[] { dcUitgeverID };
+            dtPublisher.Columns.Add(dcPublisherId);
+            dtPublisher.Columns.Add(dcPUblisherName);
+            dtPublisher.PrimaryKey = new DataColumn[] { dcPublisherId };
 
             // creatie boeken
-            DataTable dtBoeken = new DataTable();
-            dtBoeken.TableName = "Boeken";
-            dsBoekenLijst.Tables.Add(dtBoeken);
+            DataTable dtBooks = new DataTable();
+            dtBooks.TableName = "Boeken";
+            dsBookList.Tables.Add(dtBooks);
 
-            DataColumn dcboekID = new DataColumn();
-            dcboekID.ColumnName = "boekID";
-            dcboekID.DataType = typeof(int);
-            dcboekID.AutoIncrement = true;
-            dcboekID.AutoIncrementSeed = 1;
-            dcboekID.AutoIncrementStep = 1;
-            dcboekID.Unique = true;
-            dtBoeken.Columns.Add(dcboekID);
-            dtBoeken.PrimaryKey = new DataColumn[] { dcboekID };
+            DataColumn dcBookId = new DataColumn();
+            dcBookId.ColumnName = "boekID";
+            dcBookId.DataType = typeof(int);
+            dcBookId.AutoIncrement = true;
+            dcBookId.AutoIncrementSeed = 1;
+            dcBookId.AutoIncrementStep = 1;
+            dcBookId.Unique = true;
+            dtBooks.Columns.Add(dcBookId);
+            dtBooks.PrimaryKey = new DataColumn[] { dcBookId };
 
             // de overige velden voegen we op een kortere manier toe
-            dtBoeken.Columns.Add("Titel", typeof(string));
-            dtBoeken.Columns.Add("AuteurID", typeof(int));
-            dtBoeken.Columns.Add("UitgeverID", typeof(int));
-            dtBoeken.Columns.Add("Jaartal", typeof(int));
+            dtBooks.Columns.Add("Titel", typeof(string));
+            dtBooks.Columns.Add("AuteurID", typeof(int));
+            dtBooks.Columns.Add("UitgeverID", typeof(int));
+            dtBooks.Columns.Add("Jaartal", typeof(int));
 
-            dsBoekenLijst.Relations.Add(dsBoekenLijst.Tables[0].Columns["AuteurID"], dsBoekenLijst.Tables[2].Columns["AuteurID"]);
+            dsBookList.Relations.Add(dsBookList.Tables[0].Columns["AuteurID"], dsBookList.Tables[2].Columns["AuteurID"]);
         }
-        private void VulTabellen()
+        private void FillTables()
         {
-            ToevoegenDataAuteur("Boon Louis");
-            ToevoegenDataAuteur("Tuchman Barbara");
-            ToevoegenDataAuteur("Cook Robin");
-            ToevoegenDataUitgever("AW Bruna");
-            ToevoegenDataUitgever("Luttingh");
+            AddDataAuthor("Boon Louis");
+            AddDataAuthor("Tuchman Barbara");
+            AddDataAuthor("Cook Robin");
+            AddDataPublisher("AW Bruna");
+            AddDataPublisher("Luttingh");
         }
-        private void ToevoegenDataAuteur(string naam)
+        private void AddDataAuthor(string name)
         {
-            DataRow nieuweAuteur = dsBoekenLijst.Tables["Auteur"].NewRow();
-            nieuweAuteur["auteurNaam"] = naam;
-            dsBoekenLijst.Tables["Auteur"].Rows.Add(nieuweAuteur);
+            DataRow newAuthor = dsBookList.Tables["Auteur"].NewRow();
+            newAuthor["auteurNaam"] = name;
+            dsBookList.Tables["Auteur"].Rows.Add(newAuthor);
         }
-        private void ToevoegenDataUitgever(string naam)
+        private void AddDataPublisher(string name)
         {
-            DataRow nieuweUitgever = dsBoekenLijst.Tables["Uitgever"].NewRow();
-            nieuweUitgever["UitgeverNaam"] = naam;
-            dsBoekenLijst.Tables["Uitgever"].Rows.Add(nieuweUitgever);
+            DataRow newPublisher = dsBookList.Tables["Uitgever"].NewRow();
+            newPublisher["UitgeverNaam"] = name;
+            dsBookList.Tables["Uitgever"].Rows.Add(newPublisher);
         }
         private void Sort_Click(object sender, RoutedEventArgs e)
         {
-            DataView gesorteerdeTabel = new DataView();
-            gesorteerdeTabel.Table = dsBoekenLijst.Tables["Auteur"];
-            gesorteerdeTabel.Sort = "AuteurNaam desc, AuteurID desc";
-            dgAuthors.ItemsSource = gesorteerdeTabel;
+            DataView sortedTable = new DataView();
+            sortedTable.Table = dsBookList.Tables["Auteur"];
+            sortedTable.Sort = "AuteurNaam desc, AuteurID desc";
+            dgAuthors.ItemsSource = sortedTable;
         }
         private void Filter_Click(object sender, RoutedEventArgs e)
         {
-            DataView gefilterdeTabel = new DataView(dsBoekenLijst.Tables["Auteur"]);
-            gefilterdeTabel.RowFilter = "AuteurNaam like 'T%'";
-            dgAuthors.ItemsSource = gefilterdeTabel;
+            DataView filteredTable = new DataView(dsBookList.Tables["Auteur"]);
+            filteredTable.RowFilter = "AuteurNaam like 'T%'";
+            dgAuthors.ItemsSource = filteredTable;
         }
         private void AddAuthor_Click(object sender, RoutedEventArgs e)
         {
-            string auteur = txtAuthor.Text.Trim();
-            ToevoegenDataAuteur(auteur);
-            dgAuthors.ItemsSource = dsBoekenLijst.Tables["Auteur"].DefaultView;
-            BronGegevensAanpassen();
+            string author = txtAuthor.Text.Trim();
+            AddDataAuthor(author);
+            dgAuthors.ItemsSource = dsBookList.Tables["Auteur"].DefaultView;
+            SourceDataChange();
         }
-        private void BronGegevensAanpassen()
+        private void SourceDataChange()
         {
             cmbAuthors.Items.Clear();
             cmbPublishers.Items.Clear();
             ComboBoxItem itm;
-            for (int teller = 0; teller < dsBoekenLijst.Tables[0].Rows.Count; teller++)
+            for (int counter = 0; counter < dsBookList.Tables[0].Rows.Count; counter++)
             {
                 itm = new ComboBoxItem();
-                itm.Content = (dsBoekenLijst.Tables[0].Rows[teller][1]);
-                itm.Tag = (dsBoekenLijst.Tables[0].Rows[teller][0]);
+                itm.Content = (dsBookList.Tables[0].Rows[counter][1]);
+                itm.Tag = (dsBookList.Tables[0].Rows[counter][0]);
                 cmbAuthors.Items.Add(itm);
             }
             cmbAuthors.SelectedIndex = 0;
 
-            for (int teller = 0; teller < dsBoekenLijst.Tables[1].Rows.Count; teller++)
+            for (int counter = 0; counter < dsBookList.Tables[1].Rows.Count; counter++)
             {
                 itm = new ComboBoxItem();
-                itm.Content = dsBoekenLijst.Tables[1].Rows[teller][1];
-                itm.Tag = dsBoekenLijst.Tables[1].Rows[teller][0];
+                itm.Content = dsBookList.Tables[1].Rows[counter][1];
+                itm.Tag = dsBookList.Tables[1].Rows[counter][0];
                 cmbPublishers.Items.Add(itm);
             }
             cmbPublishers.SelectedIndex = 0;
         }
-        private void ToevoegenBoek(string titel, int auteurID, int uitgeverID, int jaartal)
+        private void AddBook(string title, int authorId, int publisherId, int year)
         {
-            DataRow nieuwBoek = dsBoekenLijst.Tables[2].NewRow(); //Tables[2] is Tables["Boeken"]
-            nieuwBoek["Titel"] = titel;
-            nieuwBoek["AuteurID"] = auteurID;
-            nieuwBoek["UitgeverID"] = uitgeverID;
-            nieuwBoek["Jaartal"] = jaartal;
-            dsBoekenLijst.Tables[2].Rows.Add(nieuwBoek);
+            DataRow newBook = dsBookList.Tables[2].NewRow(); //Tables[2] is Tables["Boeken"]
+            newBook["Titel"] = title;
+            newBook["AuteurID"] = authorId;
+            newBook["UitgeverID"] = publisherId;
+            newBook["Jaartal"] = year;
+            dsBookList.Tables[2].Rows.Add(newBook);
         }
         private void AddBook_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string titel = txtTitle.Text;
-                int jaartal = int.Parse(txtYear.Text);
+                string title = txtTitle.Text;
+                int year = int.Parse(txtYear.Text);
                 ComboBoxItem itm;
                 itm = (ComboBoxItem)cmbAuthors.SelectedItem;
-                int IDauteur = int.Parse(itm.Tag.ToString());
+                int IDauthor = int.Parse(itm.Tag.ToString());
                 itm = (ComboBoxItem)cmbPublishers.SelectedItem;
-                int IDuitgever = int.Parse(itm.Tag.ToString());
-                ToevoegenBoek(titel, IDauteur, IDuitgever, jaartal);
-                dgBooks.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
+                int IDpublisher = int.Parse(itm.Tag.ToString());
+                AddBook(title, IDauthor, IDpublisher, year);
+                dgBooks.ItemsSource = dsBookList.Tables[2].DefaultView;
             }
             catch (Exception ex)
             {
@@ -219,18 +219,18 @@ namespace Pra.DbDisconnected.WPF
         {
             if (dgAuthors.SelectedIndex > -1)
             {
-                string zoekAuteurID = dgAuthors.SelectedValue.ToString();
-                foreach (DataRow rij in dsBoekenLijst.Tables[0].Rows)
+                string searchAuthorId = dgAuthors.SelectedValue.ToString();
+                foreach (DataRow row in dsBookList.Tables[0].Rows)
                 {
-                    if (rij["auteurID"].ToString() == zoekAuteurID)
+                    if (row["auteurID"].ToString() == searchAuthorId)
                     {
-                        dsBoekenLijst.Tables[0].Rows.Remove(rij);
+                        dsBookList.Tables[0].Rows.Remove(row);
                         break;
                     }
                 }
-                BronGegevensAanpassen();
-                dgAuthors.ItemsSource = dsBoekenLijst.Tables[0].DefaultView;
-                dgBooks.ItemsSource = dsBoekenLijst.Tables[2].DefaultView;
+                SourceDataChange();
+                dgAuthors.ItemsSource = dsBookList.Tables[0].DefaultView;
+                dgBooks.ItemsSource = dsBookList.Tables[2].DefaultView;
             }
         }
 
